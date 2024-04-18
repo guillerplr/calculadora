@@ -64,6 +64,10 @@ function finaliza() {
       display.value =
         Math.round((Number(atual[0]) / Number(atual[2])) * 100) / 100;
       break;
+    case '%':
+      display.value =
+        Math.round((Number(atual[0]) / 100) * Number(atual[2]) * 100) / 100;
+      break;
     default:
       display.value('Erro ao finalizar');
       break;
@@ -123,6 +127,8 @@ function handleClick({ target }) {
       decimal = false;
       break;
     case '%':
+      toStorage(display.value, '%');
+      decimal = false;
       break;
     case '=':
       if (!final) {
@@ -295,7 +301,6 @@ function handleKey(event) {
       decimal = false;
       break;
     default:
-      console.log(event.keyCode);
       break;
   }
 }
@@ -303,19 +308,19 @@ function handleKey(event) {
 teclas.forEach((button) => button.addEventListener('click', handleClick));
 window.addEventListener('keyup', handleKey);
 
-function copyText() {
-  // get the container
-  const element = document.querySelector('#resultado');
-  console.log(element.value);
-  // Create a fake `textarea` and set the contents to the text
-  // you want to copy
-  const storage = document.createElement('textarea');
-  storage.value = element.value;
-  element.appendChild(storage);
+// function copyText() {
+//   // get the container
+//   const element = document.querySelector('#resultado');
+//   console.log(element.value);
+//   // Create a fake `textarea` and set the contents to the text
+//   // you want to copy
+//   const storage = document.createElement('textarea');
+//   storage.value = element.value;
+//   element.appendChild(storage);
 
-  // Copy the text in the fake `textarea` and remove the `textarea`
-  storage.select();
-  storage.setSelectionRange(0, 99999);
-  navigator.clipboard.writeText(storage.value);
-  element.removeChild(storage);
-}
+//   // Copy the text in the fake `textarea` and remove the `textarea`
+//   storage.select();
+//   storage.setSelectionRange(0, 99999);
+//   navigator.clipboard.writeText(storage.value);
+//   element.removeChild(storage);
+// }
