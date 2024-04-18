@@ -60,25 +60,44 @@ function finaliza() {
       display.value = display.value.replace('.', ',');
       calculadora.setAttribute(
         'data-content',
-        atual.join(' ').replace('.', ','),
+        atual.join(' ').replaceAll('.', ','),
       );
-
       break;
     case '-':
       display.value =
         Math.round((Number(atual[0]) - Number(atual[2])) * 100) / 100;
+      display.value = display.value.replace('.', ',');
+      calculadora.setAttribute(
+        'data-content',
+        atual.join(' ').replaceAll('.', ','),
+      );
       break;
     case 'x':
       display.value =
         Math.round(Number(atual[0]) * Number(atual[2]) * 100) / 100;
+      display.value = display.value.replace('.', ',');
+      calculadora.setAttribute(
+        'data-content',
+        atual.join(' ').replaceAll('.', ','),
+      );
       break;
     case '÷':
       display.value =
         Math.round((Number(atual[0]) / Number(atual[2])) * 100) / 100;
+      display.value = display.value.replace('.', ',');
+      calculadora.setAttribute(
+        'data-content',
+        atual.join(' ').replaceAll('.', ','),
+      );
       break;
     case '%':
       display.value =
         Math.round((Number(atual[0]) / 100) * Number(atual[2]) * 100) / 100;
+      display.value = display.value.replace('.', ',');
+      calculadora.setAttribute(
+        'data-content',
+        atual.join(' ').replaceAll('.', ','),
+      );
       break;
     default:
       display.value('Erro ao finalizar');
