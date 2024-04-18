@@ -17,7 +17,10 @@ function toStorage(value, operator) {
     localStorage.setItem('values', JSON.stringify(atual));
     calculadora.setAttribute('data-content', atual.join(' '));
   }
+
+  value = value.replace(',', '.');
   value = +value;
+
   if (value != '' && !final) {
     atual = JSON.parse(localStorage.getItem('values'));
     if (!atual) {
@@ -32,7 +35,10 @@ function toStorage(value, operator) {
       finaliza();
     } else {
       display.value = '';
-      calculadora.setAttribute('data-content', atual.join(' '));
+      calculadora.setAttribute(
+        'data-content',
+        atual.join(' ').replace('.', ','),
+      );
     }
   } else if (value != '' && final) {
     localStorage.clear();
@@ -40,7 +46,7 @@ function toStorage(value, operator) {
     atual.push(value);
     atual.push(operator);
     localStorage.setItem('values', JSON.stringify(atual));
-    calculadora.setAttribute('data-content', atual.join(' '));
+    calculadora.setAttribute('data-content', atual.join(' ').replace('.', ','));
     display.value = '';
     final = false;
   }
@@ -51,6 +57,12 @@ function finaliza() {
     case '+':
       display.value =
         Math.round((Number(atual[0]) + Number(atual[2])) * 100) / 100;
+      display.value = display.value.replace('.', ',');
+      calculadora.setAttribute(
+        'data-content',
+        atual.join(' ').replace('.', ','),
+      );
+
       break;
     case '-':
       display.value =
@@ -87,7 +99,7 @@ function handleClick({ target }) {
   animateClick(target);
 
   switch (target.innerHTML) {
-    case '.':
+    case ',':
       if (!decimal) {
         if (display.value.length === 0) {
           display.value += '0' + target.innerHTML;
@@ -152,13 +164,15 @@ function handleClick({ target }) {
 
 function handleKey(event) {
   switch (event.keyCode) {
-    case '.':
+    case 110:
+    case 188:
+    case 190:
       if (!decimal) {
         if (display.value.length === 0) {
-          display.value += '0' + target.innerHTML;
+          display.value += '0,';
           decimal = true;
         } else {
-          display.value += target.innerHTML;
+          display.value += ',';
           decimal = true;
         }
       }
@@ -191,6 +205,7 @@ function handleKey(event) {
       break;
 
     case 96:
+    case 48:
       if (!final) {
         if (display.value.length < 9) display.value += 0;
       } else {
@@ -201,6 +216,7 @@ function handleKey(event) {
       }
       break;
     case 97:
+    case 49:
       if (!final) {
         if (display.value.length < 9) display.value += 1;
       } else {
@@ -211,6 +227,7 @@ function handleKey(event) {
       }
       break;
     case 98:
+    case 50:
       if (!final) {
         if (display.value.length < 9) display.value += 2;
       } else {
@@ -221,6 +238,7 @@ function handleKey(event) {
       }
       break;
     case 99:
+    case 51:
       if (!final) {
         if (display.value.length < 9) display.value += 3;
       } else {
@@ -231,6 +249,7 @@ function handleKey(event) {
       }
       break;
     case 100:
+    case 52:
       if (!final) {
         if (display.value.length < 9) display.value += 4;
       } else {
@@ -241,6 +260,7 @@ function handleKey(event) {
       }
       break;
     case 101:
+    case 53:
       if (!final) {
         if (display.value.length < 9) display.value += 5;
       } else {
@@ -251,6 +271,7 @@ function handleKey(event) {
       }
       break;
     case 102:
+    case 54:
       if (!final) {
         if (display.value.length < 9) display.value += 6;
       } else {
@@ -261,6 +282,7 @@ function handleKey(event) {
       }
       break;
     case 103:
+    case 55:
       if (!final) {
         if (display.value.length < 9) display.value += 7;
       } else {
@@ -271,6 +293,7 @@ function handleKey(event) {
       }
       break;
     case 104:
+    case 56:
       if (!final) {
         if (display.value.length < 9) display.value += 8;
       } else {
@@ -281,6 +304,7 @@ function handleKey(event) {
       }
       break;
     case 105:
+    case 57:
       if (!final) {
         if (display.value.length < 9) display.value += 9;
       } else {
@@ -291,6 +315,7 @@ function handleKey(event) {
       }
       break;
     case 27:
+    case 58:
       display.value = '';
       calculadora.setAttribute('data-content', '');
       localStorage.clear();
