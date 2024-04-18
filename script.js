@@ -103,6 +103,11 @@ function finaliza() {
       display.value('Erro ao finalizar');
       break;
   }
+  const result = document.querySelector('.ultimos');
+  const ultimos = document.createElement('p');
+  ultimos.innerText =
+    atual.join(' ').replaceAll('.', ',') + ' = ' + display.value;
+  result.appendChild(ultimos);
 
   final = true;
 }
@@ -351,6 +356,15 @@ function handleKey(event) {
 
 teclas.forEach((button) => button.addEventListener('click', handleClick));
 window.addEventListener('keyup', handleKey);
+
+function handleClear() {
+  const paragraphs = document.getElementsByTagName('p');
+  while (paragraphs.length > 0)
+    paragraphs[0].parentNode.removeChild(paragraphs[0]);
+}
+
+const clearButton = document.querySelector('.clearButton');
+clearButton.addEventListener('click', handleClear);
 
 // function copyText() {
 //   // get the container
