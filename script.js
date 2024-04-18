@@ -1,3 +1,5 @@
+localStorage.clear();
+
 const calculadora = document.querySelector('.calculadora');
 const display = document.querySelector('.display');
 const teclas = document.querySelectorAll('.tecla');
@@ -15,7 +17,7 @@ function toStorage(value, operator) {
     localStorage.setItem('values', JSON.stringify(atual));
     calculadora.setAttribute('data-content', atual.join(' '));
   }
-
+  value = +value;
   if (value != '' && !final) {
     atual = JSON.parse(localStorage.getItem('values'));
     if (!atual) {
@@ -47,16 +49,20 @@ function toStorage(value, operator) {
 function finaliza() {
   switch (atual[1]) {
     case '+':
-      display.value = Number(atual[0]) + Number(atual[2]);
+      display.value =
+        Math.round((Number(atual[0]) + Number(atual[2])) * 100) / 100;
       break;
     case '-':
-      display.value = Number(atual[0]) - Number(atual[2]);
+      display.value =
+        Math.round((Number(atual[0]) - Number(atual[2])) * 100) / 100;
       break;
     case 'x':
-      display.value = Number(atual[0]) * Number(atual[2]);
+      display.value =
+        Math.round(Number(atual[0]) * Number(atual[2]) * 100) / 100;
       break;
     case '÷':
-      display.value = Number(atual[0]) / Number(atual[2]);
+      display.value =
+        Math.round((Number(atual[0]) / Number(atual[2])) * 100) / 100;
       break;
     default:
       display.value('Erro ao finalizar');
@@ -95,8 +101,10 @@ function handleClick({ target }) {
       decimal = false;
       break;
     case 'CE':
-      display.value = '';
-      decimal = false;
+      if (!final) {
+        display.value = '';
+        decimal = false;
+      }
       break;
     case '+':
       toStorage(display.value, '+');
@@ -125,7 +133,7 @@ function handleClick({ target }) {
       break;
     default:
       if (!final) {
-        display.value += target.innerHTML;
+        if (display.value.length < 9) display.value += target.innerHTML;
       } else {
         localStorage.clear();
         calculadora.setAttribute('data-content', '');
@@ -149,16 +157,7 @@ function handleKey(event) {
         }
       }
       break;
-    case 'C':
-      display.value = '';
-      calculadora.setAttribute('data-content', '');
-      localStorage.clear();
-      decimal = false;
-      break;
-    case 'CE':
-      display.value = '';
-      decimal = false;
-      break;
+
     case 107:
       toStorage(display.value, '+');
       decimal = false;
@@ -187,7 +186,7 @@ function handleKey(event) {
 
     case 96:
       if (!final) {
-        display.value += 0;
+        if (display.value.length < 9) display.value += 0;
       } else {
         localStorage.clear();
         calculadora.setAttribute('data-content', '');
@@ -197,7 +196,7 @@ function handleKey(event) {
       break;
     case 97:
       if (!final) {
-        display.value += 1;
+        if (display.value.length < 9) display.value += 1;
       } else {
         localStorage.clear();
         calculadora.setAttribute('data-content', '');
@@ -207,7 +206,7 @@ function handleKey(event) {
       break;
     case 98:
       if (!final) {
-        display.value += 2;
+        if (display.value.length < 9) display.value += 2;
       } else {
         localStorage.clear();
         calculadora.setAttribute('data-content', '');
@@ -217,7 +216,7 @@ function handleKey(event) {
       break;
     case 99:
       if (!final) {
-        display.value += 3;
+        if (display.value.length < 9) display.value += 3;
       } else {
         localStorage.clear();
         calculadora.setAttribute('data-content', '');
@@ -227,7 +226,7 @@ function handleKey(event) {
       break;
     case 100:
       if (!final) {
-        display.value += 4;
+        if (display.value.length < 9) display.value += 4;
       } else {
         localStorage.clear();
         calculadora.setAttribute('data-content', '');
@@ -237,7 +236,7 @@ function handleKey(event) {
       break;
     case 101:
       if (!final) {
-        display.value += 5;
+        if (display.value.length < 9) display.value += 5;
       } else {
         localStorage.clear();
         calculadora.setAttribute('data-content', '');
@@ -247,7 +246,7 @@ function handleKey(event) {
       break;
     case 102:
       if (!final) {
-        display.value += 6;
+        if (display.value.length < 9) display.value += 6;
       } else {
         localStorage.clear();
         calculadora.setAttribute('data-content', '');
@@ -257,7 +256,7 @@ function handleKey(event) {
       break;
     case 103:
       if (!final) {
-        display.value += 7;
+        if (display.value.length < 9) display.value += 7;
       } else {
         localStorage.clear();
         calculadora.setAttribute('data-content', '');
@@ -267,7 +266,7 @@ function handleKey(event) {
       break;
     case 104:
       if (!final) {
-        display.value += 8;
+        if (display.value.length < 9) display.value += 8;
       } else {
         localStorage.clear();
         calculadora.setAttribute('data-content', '');
@@ -277,7 +276,7 @@ function handleKey(event) {
       break;
     case 105:
       if (!final) {
-        display.value += 9;
+        if (display.value.length < 9) display.value += 9;
       } else {
         localStorage.clear();
         calculadora.setAttribute('data-content', '');
@@ -303,3 +302,20 @@ function handleKey(event) {
 
 teclas.forEach((button) => button.addEventListener('click', handleClick));
 window.addEventListener('keyup', handleKey);
+
+function copyText() {
+  // get the container
+  const element = document.querySelector('#resultado');
+  console.log(element.value);
+  // Create a fake `textarea` and set the contents to the text
+  // you want to copy
+  const storage = document.createElement('textarea');
+  storage.value = element.value;
+  element.appendChild(storage);
+
+  // Copy the text in the fake `textarea` and remove the `textarea`
+  storage.select();
+  storage.setSelectionRange(0, 99999);
+  navigator.clipboard.writeText(storage.value);
+  element.removeChild(storage);
+}
