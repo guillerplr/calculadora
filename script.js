@@ -5,6 +5,33 @@ const display = document.querySelector('.display');
 const teclas = document.querySelectorAll('.tecla');
 
 let decimal = false;
+let final = false;
+let atual = [];
+
+function toStorage(value, operator) {
+  if (value != '' && !final) {
+    let atual = JSON.parse(localStorage.getItem('values'));
+    if (!atual) {
+      atual = [];
+    }
+    atual.push(value);
+    atual.push(operator);
+    localStorage.setItem('values', JSON.stringify(atual));
+    if (atual.length > 3) {
+      atual.pop();
+      calculadora.setAttribute('data-content', atual.join(' ') + ' =');
+
+      finaliza();
+    } else {
+      calculadora.setAttribute('data-content', atual.join(' '));
+    }
+  }
+}
+
+function finaliza() {
+  final = true;
+  console.log('finalize');
+}
 
 function handleClick({ target }) {
   switch (target.innerHTML) {
@@ -27,59 +54,38 @@ function handleClick({ target }) {
       decimal = false;
       break;
     case '+':
-      if (display.value != '') {
-        if (calculadora.getAttribute('data-content') === '') {
-          localStorage.setItem('fator1', display.value);
-        } else {
-          localStorage.setItem('fator2', display.value);
-        }
-        calculadora.setAttribute('data-content', display.value + ' +');
-        display.value = '';
-        decimal = false;
-      }
+      toStorage(display.value, '+');
+      display.value = '';
+      decimal = false;
       break;
     case '-':
-      if (display.value != '') {
-        calculadora.setAttribute('data-content', display.value + ' -');
-        localStorage.setItem('fator1', display.value);
-        display.value = '';
-        decimal = false;
-      }
+      toStorage(display.value, '-');
+      display.value = '';
+      decimal = false;
       break;
     case '÷':
-      if (display.value != '') {
-        calculadora.setAttribute('data-content', display.value + ' ÷');
-        localStorage.setItem('fator1', display.value);
-        display.value = '';
-        decimal = false;
-      }
+      toStorage(display.value, '÷');
+      display.value = '';
+      decimal = false;
       break;
     case 'x':
-      if (display.value != '') {
-        calculadora.setAttribute('data-content', display.value + ' x');
-        localStorage.setItem('fator1', display.value);
-        display.value = '';
-        decimal = false;
-      }
+      toStorage(display.value, 'x');
+      display.value = '';
+      decimal = false;
       break;
     case '=':
-      if (localStorage.getItem('fator1')) {
-        localStorage.setItem('fator2', display.value);
-        const resultado =
-          +localStorage.getItem('fator1') + +localStorage.getItem('fator2');
-        calculadora.setAttribute(
-          'data-content',
-          localStorage.getItem('fator1') +
-            ' + ' +
-            localStorage.getItem('fator2') +
-            ' =',
-        );
-        display.value = resultado;
-      }
-
+      toStorage(display.value, '=');
+      display.value = 'resultado';
       break;
     default:
-      display.value += target.innerHTML;
+      if (!final) {
+        display.value += target.innerHTML;
+      } else {
+        calculadora.setAttribute('data-content', '');
+        display.value = target.innerHTML;
+        final = false;
+        localStorage.clear();
+      }
       break;
   }
 }
